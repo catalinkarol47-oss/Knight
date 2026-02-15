@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Админ-панель | xXKnightXx</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>🔒 Админ-панель клана xXKnightXx</h1>
+  </header>
+
+  <nav>
+   <a href="index.html">Главная</a>
+    <a href="rules.html">Правила</a>
+    <a href="members.html">Члены клана</a>
+    <a href="support.html">Поддержка</a>
+    <a href="donate.html">Донат</a>
+    <a href="admin.html" style="color: #ffcc00;">Админ</a>
+    <a href="discord.html" style="color: #ffcc00;">Discord</a>
+  </nav>
+
+  <main>
+    <section class="section animated">
+      <h2>Вход в админ-панель</h2>
+      <div id="loginScreen">
+        <input type="password" id="adminPassword" placeholder="Введите пароль">
+        <button onclick="login()">Войти</button>
+      </div>
+
+      <div id="adminPanel" style="display: none;">
+        <h3>Добавить нового члена клана</h3>
+        <input type="text" id="newMemberName" placeholder="Ник">
+        <select id="newMemberRole">
+          <option value="Участник">Участник</option>
+          <option value="Админ">Админ</option>
+          <option value="Заместитель">Заместитель</option>
+        </select>
+        <button onclick="addMember()">Добавить</button>
+
+        <h3>Список членов клана</h3>
+        <ul id="memberList"></ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p><a href="index.html" style="color: var(--primary);">← Назад на главную</a></p>
+  </footer>
+
+  <script>
+    const correctPassword = 'Catalin22245!!!';
+
+    function login() {
+      if (document.getElementById('adminPassword').value === correctPassword) {
+        document.getElementById('loginScreen').style.display = 'none';
+        document.getElementById('adminPanel').style.display = 'block';
+        loadMembers();
+      } else {
+        alert('Неверный пароль!');
+      }
+    }
+
+    let membersData = {};
+
+    async function loadMembers() {
+      try {
+        const res = await fetch('members.json');
+        membersData = await res.json();
+
+        const list = document.getElementById('memberList');
+        list.innerHTML = '';
+
+        // Лидер
+        list.innerHTML += `<li>${membersData.leader.role}: ${membersData.leader.name}</li>`;
+        // Админ
+        list.innerHTML += `<li>${membersData.admin.role}: ${membersData.admin.name}</li>`;
+        // Участники
+        membersData.members.forEach((m, i) => {
+          list.innerHTML += `<li>${m.role}: ${m.name} <button onclick="removeMember(${i})">Удалить</button></li>`;
+        });
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function addMember() {
+      const name = document.getElementById('newMemberName').value.trim();
+      const role = document.getElementById('newMemberRole').value;
+      if (!name) return;
+
+      membersData.members.push({ name, role });
+      saveMembers();
+      document.getElementById('newMemberName').value = '';
+      loadMembers();
+    }
+
+    function removeMember(index) {
+      membersData.members.splice(index, 1);
+      saveMembers();
+      loadMembers();
+    }
+
+    function saveMembers() {
+      alert('⚠️ Список обновлён! Теперь скопируй JSON ниже и замени файл members.json на Replit:');
+      console.log(JSON.stringify(membersData, null, 2));
+    }
+  </script>
+</body>
+</html>

@@ -14,15 +14,61 @@
   box-sizing: border-box;
 }
 
+/* Анимированный фон с движущимися точками */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background: linear-gradient(to bottom, #0c0c0c, #1a1a2e);
+  pointer-events: none;
+}
+
+body::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  pointer-events: none;
+  background-image:
+    radial-gradient(circle at 10% 20%, #ff0000 1.5px, transparent 2px),
+    radial-gradient(circle at 20% 30%, #00ff00 1.5px, transparent 2px),
+    radial-gradient(circle at 30% 10%, #0000ff 1.5px, transparent 2px),
+    radial-gradient(circle at 40% 40%, #ffff00 1.5px, transparent 2px),
+    radial-gradient(circle at 50% 50%, #ff00ff 1.5px, transparent 2px),
+    radial-gradient(circle at 60% 60%, #00ffff 1.5px, transparent 2px),
+    radial-gradient(circle at 70% 70%, #ff9900 1.5px, transparent 2px),
+    radial-gradient(circle at 80% 80%, #ff66cc 1.5px, transparent 2px),
+    radial-gradient(circle at 90% 10%, #66ff66 1.5px, transparent 2px),
+    radial-gradient(circle at 15% 85%, #ffcc00 1.5px, transparent 2px);
+  animation: moveDots 50s linear infinite;
+  background-size: 300px 300px;
+}
+
+@keyframes moveDots {
+  0% {
+    transform: translate(0, 0);
+  }
+  100% {
+    transform: translate(-300px, -300px);
+  }
+}
+
+/* Основной стиль body */
 body {
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   background-color: var(--dark);
   color: #fff;
-  background-image: url('assets/bg-pattern.svg');
-  background-size: 2px 2px;
   min-height: 100vh;
   overflow-x: hidden;
   scroll-behavior: smooth;
+  position: relative;
 }
 
 header {
